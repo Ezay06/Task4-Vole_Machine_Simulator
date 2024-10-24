@@ -15,6 +15,7 @@ class Machine{
     string PC;
     string IR;
     public:
+    Machine();
     void menu();
     void execute_IR();
 };
@@ -24,15 +25,18 @@ class Memory{
     vector<string> memory_cells{256};
     public:
     void load_cells(string filename);
+    string getInstruction(string PC);
+    string getScreen();
     void alter_cell(string cell, string new_value);
     friend ostream& operator<<(ostream& o, Memory& m);
 };
 
 class Register{
     private:
-    vector<string> reg_cells{256};
+    vector<string> reg_cells{16};
     public:
-    void alter_cell(string cell);
+    void alter_cell(string cell, string new_value);
+    friend ostream& operator<<(ostream& o, Register& r);
 };
 
 #endif
