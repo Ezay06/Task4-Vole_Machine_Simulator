@@ -21,15 +21,16 @@ class Machine{
 
 class Memory{
     private:
-    vector<string> memory_cells(256);
+    vector<string> memory_cells{256};
     public:
     void load_cells(string filename);
-    void alter_cell(string cell);
+    void alter_cell(string cell, string new_value);
+    friend ostream& operator<<(ostream& o, Memory& m);
 };
 
 class Register{
     private:
-    vector<string> reg_cells(16);
+    vector<string> reg_cells{256};
     public:
     void alter_cell(string cell);
 };
