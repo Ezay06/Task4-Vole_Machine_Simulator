@@ -1,4 +1,9 @@
 #include "VoleSimulator.hpp"
+string decimalToHex(int decimal) {
+    stringstream ss;
+    ss << hex << decimal; 
+    return ss.str();            
+}
 
 void Memory::load_cells(string filename){
     string instruct;
@@ -19,12 +24,11 @@ string Memory::getInstruction(string PC){
     int cell = stoi(PC, nullptr, 16);
     string instruction = memory_cells[cell] + memory_cells[cell + 1];
     regex pat1("C000");
-    regex pat2("3[0123456789ABCDEF]00");
-    regex pat3("40[0123456789ABCDEF][0123456789ABCDEF]");
-    regex pat4("[1256789B][0123456789ABCDEF][0123456789ABCDEF][0123456789ABCDEF]");
+    regex pat2("40[0123456789ABCDEF][0123456789ABCDEF]");
+    regex pat3("[12356789B][0123456789ABCDEF][0123456789ABCDEF][0123456789ABCDEF]");
     smatch m;
 
-    if (regex_match(instruction, m, pat1) || regex_match(instruction, m, pat2) || regex_match(instruction, m, pat3) || regex_match(instruction, m, pat4)){
+    if (regex_match(instruction, m, pat1) || regex_match(instruction, m, pat2) || regex_match(instruction, m, pat3)){
         return instruction;
     }
 
@@ -35,6 +39,10 @@ string Memory::getInstruction(string PC){
 
 string Memory::getScreen(){
     return memory_cells[0];
+}
+
+string Memory::getcell(string cell){
+    return memory_cells[stoi(cell, nullptr, 16)];
 }
 
 ostream& operator<<(ostream& o, Memory& m){
@@ -57,6 +65,10 @@ ostream& operator<<(ostream& o, Memory& m){
 void Register::alter_cell(string cell, string new_value){
     int memory_cell = stoi(cell, nullptr, 16);
     reg_cells[memory_cell] = new_value;
+}
+
+string Register::getcell(string cell){
+    return reg_cells[stoi(cell, nullptr, 16)];
 }
 
 ostream& operator<<(ostream& o, Register& r){
@@ -103,5 +115,60 @@ void Machine::menu(){
 
     else if (option == 6){
         execute_IR();
+    }
+}
+
+void Machine::execute_IR(){
+    if (IR[0] == '1'){
+        string register_cell = string(1, IR[1]);
+        string memory_cell = string(1, IR[2]) + string(1, IR[3]);
+        reg.alter_cell(register_cell, main_memory.getcell(memory_cell));
+        PC = decimalToHex(stoi(PC, nullptr, 16) + 2);
+        IR = main_memory.getInstruction(PC);
+    }
+
+    else if (IR[0] == '2'){
+        string register_cell = string(1, IR[1]);
+        string bit_pattern = string(1, IR[2]) + string(1, IR[3]);
+        reg.alter_cell(register_cell, bit_pattern);
+        PC = decimalToHex(stoi(PC, nullptr, 16) + 2);
+        IR = main_memory.getInstruction(PC);
+    }
+
+    else if (IR[0] == '3'){
+        string register_cell = string(1, IR[1]);
+        string memory_cell = string(1, IR[2]) + string(1, IR[3]);
+        main_memory.alter_cell(memory_cell, reg.getcell(register_cell));
+        PC = decimalToHex(stoi(PC, nullptr, 16) + 2);
+        IR = main_memory.getInstruction(PC);
+    }
+
+    else if (IR[0] == '4'){
+        string regcell1 = string(1, IR[2]);
+        string regcell2 = string(1, IR[3]);
+        reg.alter_cell(regcell2, reg.getcell(regcell1));
+        PC = decimalToHex(stoi(PC, nullptr, 16) + 2);
+        IR = main_memory.getInstruction(PC);
+    }
+
+    else if (IR[0] == '5' || IR[0] == '6'){
+        string regcell1 = string(1, IR[2]);
+        string regcell2 = string(1, IR[3]);
+        string targetreg = string(1, IR[1]);
+        reg.alter_cell(targetreg, decimalToHex(stoi(regcell1, nullptr, 16) + stoi(regcell2, nullptr, 16)));
+        PC = decimalToHex(stoi(PC, nullptr, 16) + 2);
+        IR = main_memory.getInstruction(PC);
+    }
+
+    else if (IR[0] == 'B'){
+        string register_cell = string(1, IR[1]);
+        string memory_cell = string(1, IR[2]) + string(1, IR[3]);
+        if(reg.getcell(register_cell) == reg.getcell("0")){
+            PC = decimalToHex(stoi(memory_cell, nullptr, 16));
+        }
+        else{
+            PC = decimalToHex(stoi(PC, nullptr, 16) + 2);
+        }
+        IR = main_memory.getInstruction(PC);
     }
 }

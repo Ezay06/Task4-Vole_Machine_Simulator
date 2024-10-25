@@ -6,7 +6,11 @@
 #include <string>
 #include <regex>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 using namespace std;
+
+string decimalToHex(int decimal);
 
 class Machine{
     private:
@@ -27,6 +31,7 @@ class Memory{
     void load_cells(string filename);
     string getInstruction(string PC);
     string getScreen();
+    string getcell(string cell);
     void alter_cell(string cell, string new_value);
     friend ostream& operator<<(ostream& o, Memory& m);
 };
@@ -36,6 +41,7 @@ class Register{
     vector<string> reg_cells{16};
     public:
     void alter_cell(string cell, string new_value);
+    string getcell(string cell);
     friend ostream& operator<<(ostream& o, Register& r);
 };
 
