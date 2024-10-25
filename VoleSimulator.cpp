@@ -116,6 +116,10 @@ void Machine::menu(){
     else if (option == 6){
         execute_IR();
     }
+
+    else{
+        throw runtime_error("Invalid Input");
+    }
 }
 
 void Machine::execute_IR(){
@@ -124,7 +128,6 @@ void Machine::execute_IR(){
         string memory_cell = string(1, IR[2]) + string(1, IR[3]);
         reg.alter_cell(register_cell, main_memory.getcell(memory_cell));
         PC = decimalToHex(stoi(PC, nullptr, 16) + 2);
-        IR = main_memory.getInstruction(PC);
     }
 
     else if (IR[0] == '2'){
@@ -132,7 +135,6 @@ void Machine::execute_IR(){
         string bit_pattern = string(1, IR[2]) + string(1, IR[3]);
         reg.alter_cell(register_cell, bit_pattern);
         PC = decimalToHex(stoi(PC, nullptr, 16) + 2);
-        IR = main_memory.getInstruction(PC);
     }
 
     else if (IR[0] == '3'){
@@ -140,7 +142,6 @@ void Machine::execute_IR(){
         string memory_cell = string(1, IR[2]) + string(1, IR[3]);
         main_memory.alter_cell(memory_cell, reg.getcell(register_cell));
         PC = decimalToHex(stoi(PC, nullptr, 16) + 2);
-        IR = main_memory.getInstruction(PC);
     }
 
     else if (IR[0] == '4'){
@@ -148,7 +149,6 @@ void Machine::execute_IR(){
         string regcell2 = string(1, IR[3]);
         reg.alter_cell(regcell2, reg.getcell(regcell1));
         PC = decimalToHex(stoi(PC, nullptr, 16) + 2);
-        IR = main_memory.getInstruction(PC);
     }
 
     else if (IR[0] == '5' || IR[0] == '6'){
@@ -157,7 +157,6 @@ void Machine::execute_IR(){
         string targetreg = string(1, IR[1]);
         reg.alter_cell(targetreg, decimalToHex(stoi(regcell1, nullptr, 16) + stoi(regcell2, nullptr, 16)));
         PC = decimalToHex(stoi(PC, nullptr, 16) + 2);
-        IR = main_memory.getInstruction(PC);
     }
 
     else if (IR[0] == 'B'){
@@ -169,6 +168,20 @@ void Machine::execute_IR(){
         else{
             PC = decimalToHex(stoi(PC, nullptr, 16) + 2);
         }
+    }
+
+    else if (IR[0] == 'C'){
+        end = true;
+    }
+
+
+    if (stoi(PC, nullptr, 16) <=254){
         IR = main_memory.getInstruction(PC);
+    }
+
+    else{
+        PC = "";
+        IR = "";
+        end = true;
     }
 }

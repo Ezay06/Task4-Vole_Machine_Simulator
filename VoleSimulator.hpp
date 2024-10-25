@@ -12,21 +12,18 @@ using namespace std;
 
 string decimalToHex(int decimal);
 
-class Machine{
+class Register{
     private:
-    Memory main_memory;
-    Register reg;
-    string PC;
-    string IR;
+    vector<string> reg_cells = vector<string> (16);
     public:
-    Machine();
-    void menu();
-    void execute_IR();
+    void alter_cell(string cell, string new_value);
+    string getcell(string cell);
+    friend ostream& operator<<(ostream& o, Register& r);
 };
 
 class Memory{
     private:
-    vector<string> memory_cells{256};
+    vector<string> memory_cells = vector<string> (256);
     public:
     void load_cells(string filename);
     string getInstruction(string PC);
@@ -36,13 +33,21 @@ class Memory{
     friend ostream& operator<<(ostream& o, Memory& m);
 };
 
-class Register{
+class Machine{
     private:
-    vector<string> reg_cells{16};
+    Memory main_memory;
+    Register reg;
+    string PC;
+    string IR;
     public:
-    void alter_cell(string cell, string new_value);
-    string getcell(string cell);
-    friend ostream& operator<<(ostream& o, Register& r);
+    bool end = false;
+    Machine();
+    void menu();
+    void execute_IR();
 };
+
+
+
+
 
 #endif
