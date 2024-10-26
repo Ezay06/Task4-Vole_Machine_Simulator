@@ -7,7 +7,7 @@ int main(){
             Volemachine.menu();
         }
         catch(...){
-            cout << "Invalid input. Please enter a choose an option between 1-6.";
+            cout << "Invalid input. Please enter an option between 1-6.";
         }    
     }
 }
