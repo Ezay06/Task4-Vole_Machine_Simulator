@@ -12,6 +12,16 @@
 #include <cmath>
 using namespace std;
 
+class Arithmetic {
+    public:
+    int Hextoint(string hex);
+    string inttoHex(int decimal);
+    string Hextobin(string hex);
+    string bintoHex(string bin);
+    float Hextofloat(string hex);
+    string floattoHex(float flt);
+};
+
 class Register{
     private:
     vector<string> reg_cells = vector<string> (16);
@@ -33,16 +43,6 @@ class Memory{
     string getcell(string cell);
     void alter_cell(string cell, string new_value);
     friend ostream& operator<<(ostream& o, Memory& m);
-};
-
-class Arithmetic {
-    public:
-    int Hextoint(string hex);
-    string inttoHex(int decimal);
-    string Hextobin(string hex);
-    string bintoHex(string bin);
-    float Hextofloat(string hex);
-    string floattoHex(float flt);
 };
 
 class Machine{
