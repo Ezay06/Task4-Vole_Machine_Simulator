@@ -8,13 +8,14 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <bitset>
+#include <cmath>
 using namespace std;
-
-string decimalToHex(int decimal);
 
 class Register{
     private:
     vector<string> reg_cells = vector<string> (16);
+    Arithmetic ALU;
     public:
     void alter_cell(string cell, string new_value);
     string getcell(string cell);
@@ -24,6 +25,7 @@ class Register{
 class Memory{
     private:
     vector<string> memory_cells = vector<string> (256);
+    Arithmetic ALU;
     public:
     void load_cells(string filename);
     string getInstruction(string PC);
@@ -33,10 +35,21 @@ class Memory{
     friend ostream& operator<<(ostream& o, Memory& m);
 };
 
+class Arithmetic {
+    public:
+    int Hextoint(string hex);
+    string inttoHex(int decimal);
+    string Hextobin(string hex);
+    string bintoHex(string bin);
+    float Hextofloat(string hex);
+    string floattoHex(float flt);
+};
+
 class Machine{
     private:
     Memory main_memory;
     Register reg;
+    Arithmetic ALU;
     string PC;
     string IR;
     public:
