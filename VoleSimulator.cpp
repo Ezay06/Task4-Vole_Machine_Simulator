@@ -150,10 +150,8 @@ string Arithmetic::floattoHex(float flt){
     bitset<3> power(exponent + 4);
     string exp = power.to_string();
 
-    mantissa = to_string(abs(flt));
-    mantissa.erase(0);
-    mantissa.erase(0);
-    bitset<4> man(stoi(mantissa) * 16);
+    mantissa = to_string(abs(flt) * 16);
+    bitset<4> man(stoi(mantissa));
     mantissa = man.to_string();
 
     string binary = sign + exp + mantissa;
