@@ -24,7 +24,7 @@ class Arithmetic {
 
 class Register{
     private:
-    vector<string> reg_cells = vector<string> (16);
+    vector<string> reg_cells = vector<string> (16, "00");
     Arithmetic ALU;
     public:
     void alter_cell(string cell, string new_value);
@@ -34,10 +34,10 @@ class Register{
 
 class Memory{
     private:
-    vector<string> memory_cells = vector<string> (256);
+    vector<string> memory_cells = vector<string> (256, "00");
     Arithmetic ALU;
     public:
-    void load_cells(string filename);
+    void load_cells(string filename, string start_cell = "10");
     string getInstruction(string PC);
     string getScreen();
     string getcell(string cell);

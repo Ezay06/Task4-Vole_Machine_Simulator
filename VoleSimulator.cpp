@@ -5,10 +5,10 @@ string decimalToHex(int decimal) {
     return ss.str();            
 }
 
-void Memory::load_cells(string filename){
+void Memory::load_cells(string filename, string start_cell = "10"){
     string instruct;
     ifstream instructions(filename);
-    for (int i = 0; i < memory_cells.size(); i = i + 2){
+    for (int i = ALU.Hextoint(start_cell); i < memory_cells.size(); i = i + 2){
         instructions >> instruct;
         memory_cells[i] = string(1, instruct[0]) + string(1, instruct[1]);
         memory_cells[i + 1] = string(1, instruct[2]) + string(1, instruct[3]);
@@ -161,16 +161,19 @@ string Arithmetic::floattoHex(float flt){
 
 Machine::Machine(){
     string filename;
+    string start_cell;
     cout << "Welcome to the Vole Machine Simulator. Please enter the path of the instruction file: ";
     cin >> filename;
-    main_memory.load_cells(filename);
-    PC = "00";
+    cout << "Enter the memory address from which to start loading the instructions(eg: AA): ";
+    cin >> start_cell;
+    main_memory.load_cells(filename, start_cell);
+    PC = start_cell;
     IR = main_memory.getInstruction(PC);
 }
 
 void Machine::menu(){
     int option;
-    cout << "1-Display memory\n2-Display registers\n3-Display PC\n4-Display IR\n5-Display screen\n6-Execute IR" << endl;
+    cout << "1-Display memory\n2-Display registers\n3-Display PC\n4-Display IR\n5-Execute IR" << endl;
     cout << "Choose one of the previous options(1-6): ";
     cin >> option;
     if (option == 1){
@@ -190,10 +193,6 @@ void Machine::menu(){
     }
 
     else if (option == 5){
-        cout << main_memory.getScreen();
-    }
-
-    else if (option == 6){
         execute_IR();
     }
 
@@ -221,6 +220,9 @@ void Machine::execute_IR(){
         string register_cell = string(1, IR[1]);
         string memory_cell = string(1, IR[2]) + string(1, IR[3]);
         main_memory.alter_cell(memory_cell, reg.getcell(register_cell));
+        if (memory_cell == "00"){
+            cout << reg.getcell(register_cell);
+        }
         PC = ALU.inttoHex(ALU.Hextoint(PC) + 2);
     }
 
