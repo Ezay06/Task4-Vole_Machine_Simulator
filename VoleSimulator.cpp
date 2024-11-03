@@ -5,7 +5,7 @@ string decimalToHex(int decimal) {
     return ss.str();            
 }
 
-void Memory::load_cells(string filename, string start_cell = "10"){
+void Memory::load_cells(string filename, string start_cell){
     string instruct;
     ifstream instructions(filename);
     for (int i = ALU.Hextoint(start_cell); i < memory_cells.size(); i = i + 2){
@@ -47,12 +47,12 @@ string Memory::getcell(string cell){
 
 ostream& operator<<(ostream& o, Memory& m){
     for (int i = 0; i < 16; i++){
-        o << "   " << i; 
+        o << "   " << hex << uppercase << i; 
     }
 
     cout << endl;
     for (int i = 0; i < 16; i++){
-        cout << i;
+        cout << hex << uppercase << i;
         for (int j = 0; j < 16; j++){
             cout << "  " << m.memory_cells[i * j];
         }
@@ -73,7 +73,8 @@ string Register::getcell(string cell){
 
 ostream& operator<<(ostream& o, Register& r){
     for(int i = 0; i < 16; i++){
-        o << "R" << i << " " << r.reg_cells[i] << endl;
+        o << "R" << hex << uppercase << i;
+        o << " " << r.reg_cells[i] << endl;
     }
     return o;
 }
@@ -174,7 +175,7 @@ Machine::Machine(){
 void Machine::menu(){
     int option;
     cout << "1-Display memory\n2-Display registers\n3-Display PC\n4-Display IR\n5-Execute IR" << endl;
-    cout << "Choose one of the previous options(1-6): ";
+    cout << "Choose one of the previous options(1-5): ";
     cin >> option;
     if (option == 1){
         cout << main_memory;
@@ -185,11 +186,11 @@ void Machine::menu(){
     }
 
     else if (option == 3){
-        cout << PC;
+        cout << PC << endl;
     }
 
     else if (option == 4){
-        cout << IR;
+        cout << IR << endl;
     }
 
     else if (option == 5){
