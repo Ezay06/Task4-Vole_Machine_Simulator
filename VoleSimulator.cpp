@@ -86,7 +86,7 @@ int Arithmetic::Hextoint(string hex){
 
 string Arithmetic::inttoHex(int decimal){
     stringstream ss;
-    ss << hex << decimal; 
+    ss << hex << uppercase << decimal; 
     string hexa = ss.str();
     if (hexa.size() == 1){
         return "0" + hexa;
